@@ -1,0 +1,37 @@
+---
+- name: Gather Information from Remote Machine
+  hosts: remote_host
+  gather_facts: yes
+  tasks:
+    - name: Display hostname
+      ansible.builtin.debug:
+        msg: "Hostname: {{ ansible_hostname }}"
+
+    - name: Display operating system details
+      ansible.builtin.debug:
+        msg: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Display CPU information
+      ansible.builtin.debug:
+        msg: "CPU: {{ ansible_processor }}"
+
+    - name: Display total memory
+      ansible.builtin.debug:
+        msg: "Total Memory: {{ ansible_memtotal_mb }} MB"
+
+    - name: Display disk usage
+      ansible.builtin.command:
+        cmd: df -h
+      register: disk_usage
+
+    - name: Show disk usage
+      ansible.builtin.debug:
+        msg: "{{ disk_usage.stdout }}"
+
+    - name: Display network interfaces
+      ansible.builtin.debug:
+        msg: "Network Interfaces: {{ ansible_interfaces }}"
+
+    - name: Display IP address of main interface
+      ansible.builtin.debug:
+        msg: "IP Address: {{ ansible_default_ipv4.address }}"
