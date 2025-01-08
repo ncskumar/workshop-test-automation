@@ -6,6 +6,10 @@ I want to ensure the API correctly handles CRUD operations for users
 Background:
   Given the API base URL is "http://localhost:3000/api"
 
+# Scenario: Access API without Authenication header
+#   Given I get user id 99 without token
+#   Then the response status should be 401
+
 Scenario: Create a new user
   When I send a POST request to "/users" with the following JSON:
     """

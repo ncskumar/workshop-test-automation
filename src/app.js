@@ -9,6 +9,11 @@ let users = [];
 // Create a new user
 app.post('/api/users', (req, res) => {
     const user = req.body;
+    const api_key = req.headers.authorization
+    if (api_key != "TOKEN1234") {
+        res.status(401).send();
+        return;
+    }
     user.id = users.length + 1;
     users.push(user);
     res.status(201).json(user);
@@ -16,12 +21,22 @@ app.post('/api/users', (req, res) => {
 
 // Get all users
 app.get('/api/users', (req, res) => {
+    const api_key = req.headers.authorization
+    if (api_key != "TOKEN1234") {
+        res.status(401).send();
+        return;
+    }
     res.json(users);
 });
 
 // Get a specific user by ID
 app.get('/api/users/:id', (req, res) => {
     const user = users.find(u => u.id === parseInt(req.params.id));
+    const api_key = req.headers.authorization
+    if (api_key != "TOKEN1234") {
+        res.status(401).send();
+        return;
+    }
     if (!user) return res.status(404).send('User not found');
     res.json(user);
 });
@@ -29,6 +44,11 @@ app.get('/api/users/:id', (req, res) => {
 // Update a user
 app.put('/api/users/:id', (req, res) => {
     const user = users.find(u => u.id === parseInt(req.params.id));
+    const api_key = req.headers.authorization
+    if (api_key != "TOKEN1234") {
+        res.status(401).send();
+        return;
+    }
     if (!user) return res.status(404).send('User not found');
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
@@ -37,6 +57,11 @@ app.put('/api/users/:id', (req, res) => {
 
 // Delete a user
 app.delete('/api/users/:id', (req, res) => {
+    const api_key = req.headers.authorization
+    if (api_key != "TOKEN1234") {
+        res.status(401).send();
+        return;
+    }
     const userIndex = users.findIndex(u => u.id === parseInt(req.params.id));
     if (userIndex === -1) return res.status(404).send('User not found');
     users.splice(userIndex, 1);
