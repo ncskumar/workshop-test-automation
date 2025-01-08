@@ -5,7 +5,7 @@ import { expect } from 'chai';
 let apiBaseUrl;
 let response;
 let createdUserId;
-const API_KEY = "TOKEN12345";
+const API_KEY = "TOKEN1234";
 
 // Clear all common default headers
 axios.defaults.headers.common['Authorization'] = null;
