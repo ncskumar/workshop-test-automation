@@ -13,7 +13,7 @@ app.post('/api/users', (req, res) => {
     if (api_key != "TOKEN1234") {
         res.status(401).send();
         return;
-    }
+    } 
     user.id = users.length + 1;
     users.push(user);
     res.status(201).json(user);

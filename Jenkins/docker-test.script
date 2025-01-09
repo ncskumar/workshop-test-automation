@@ -1,0 +1,65 @@
+
+pipeline {
+    agent any
+    
+    environment {
+      PATH = "${PATH}:/usr/local/bin"
+    }
+    
+    parameters {
+        string(name: 'VERSION', defaultValue: 'latest', description: 'Enter the version for the Docker image')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ncskumar/workshop-test-automation.git'
+                echo "Display content of the folder"
+                sh "pwd; ls -lsrt;"
+                sh "npm install"
+            }
+        }
+        stage('Start Application') {
+            steps {
+                sh "docker run -d --name my-app-service --restart=always -p 3000:3000 my-app-service:${params.VERSION} "
+            }
+        }
+        stage('Run Automation') {
+            steps {
+                echo "Run automation suite"
+                sh "npm run test-cjs"
+            }
+        }
+        stage('Generate Report') {
+            steps {
+                echo "Run automation suite"
+                sh "npm run test-cjs-report"
+            }
+        }
+        stage('Stop Application') {
+            steps {
+                echo "Run application "
+                sh "docker stop my-app-service; docker rm my-app-service"
+            }
+        }
+    }
+    post {
+        always {
+            echo "Archiving and publishing reports"
+            // Archive all report files
+            archiveArtifacts artifacts: 'reports/**/*', allowEmptyArchive: true
+            
+            // Publish HTML reports
+            publishHTML(target: [
+                reportName : 'Automation Test Report',
+                reportDir  : 'reports', // Adjust to the actual report directory
+                reportFiles: 'cucumber-report.html',  // Main HTML report file
+                keepAll    : true,
+                alwaysLinkToLastBuild: true
+            ])
+            
+            // Cleanup workspace
+            cleanWs()
+        }
+    }
+}

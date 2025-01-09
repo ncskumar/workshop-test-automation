@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    environment {
+      PATH = "${PATH}:/usr/local/bin"
+    }
+    
+    parameters {
+        string(name: 'VERSION', defaultValue: 'latest', description: 'Enter the version for the Docker image')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ncskumar/workshop-test-automation.git'
+                echo "Display content of the folder"
+                sh "pwd; ls -lsrt; cat Dockerfile"
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building Docker image with version: ${params.VERSION}"
+                sh "npm install"
+                sh "docker build -t my-app-service:${params.VERSION} ."
+            }
+        }
+    }
+}
