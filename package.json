@@ -3,6 +3,7 @@
     "test": "mocha --recursive",
     "start": "node src/app.js",
     "test-cjs": "npx cucumber-js --format json:reports/cucumber-report.json",
+    "test-login": "npx cucumber-js features/web-app-test/login.feature",
     "test-cjs-report": "node report-generator.cjs"
   },
   "dependencies": {
